@@ -18,7 +18,7 @@ program
 
 program.parse(process.argv)
 
-function printaddr(a) {
+function printaddr (a) {
   if (!isEmail(a)) {
     console.error('invalid address')
     process.exit(1)

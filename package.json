@@ -21,7 +21,7 @@
   "dependencies": {
     "commander": "^2.16.0",
     "email-addresses": "^3.0.1",
-    "guld-mail": "^0.1.0",
+    "guld-mail": "^0.2.0",
     "is-email": "^1.0.0"
   },
   "devDependencies": {

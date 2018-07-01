@@ -19,10 +19,11 @@ npm i -g guld-mail-cli
 
   Options:
 
-    -V, --version   output the version number
-    -h, --help      output usage information
+    -V, --version    output the version number
+    -h, --help       output usage information
 
   Commands:
 
-    address [name]  Get the guld address of the current or specified user.
+    address [name]   Get the guld address of the current or specified user.
+    parse <address>  Parse an email address, returning exit code 1 if invalid.
 ```
