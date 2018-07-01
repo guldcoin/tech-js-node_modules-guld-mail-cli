@@ -1,34 +1,26 @@
 #!/usr/bin/env node
+const { getAddress } = require('guld-mail')
 const program = require('commander')
-const pkg = require('./package.json')
-const VERSION = pkg.version
-const NAME = Object.keys(pkg.bin)[0]
+const VERSION = require('./package.json').version
 
-const COMMANDS = {
-  'config': ['Manage git config files the guld way.', {isDefault: true}],
-  'env': ['Guld environment detection module.'],
-  'git': ['Guld standardized Command Line Interface (CLI) for git.']
-}
-
+/* eslint-disable no-console */
 program
-  .name('guld')
+  .description('Guld mail is a signed, encrypted, and witnessed email system.')
   .version(VERSION)
-  .description('Guld decentralized internet CLI.')
-  .option('-u, --user', 'The user name to set up.')
-  .option('-r, --recipient', 'The recipient of a message or transaction.')
-  .option('-f, --fingerprint', 'The PGP fingerprint to sign with.')
-  // .option('-q, --quiet', '')
-
-for (var cmd in COMMANDS) {
-  var cmds = COMMANDS[cmd]
-  var desc = cmds.shift()
-  if (cmds.length > 0) {
-    program.command(cmd, desc, ...cmds).description(desc)
-  } else {
-    program.command(cmd, desc).description(desc)
-  }
-}
+program
+  .command('address [name]')
+  .description('Get the guld address of the current or specified user.')
 
 program.parse(process.argv)
 
-module.exports = program
+var cmd
+if (program.commands.map(c => c._name).indexOf(program.args[0]) !== -1) cmd = program.args.shift()
+/* eslint-disable no-console */
+switch (cmd) {
+  case 'address':
+  default:
+    if (program.args.length > 0) getAddress(program.args[0]).then(console.log)
+    else getAddress().then(console.log)
+    break
+}
+/* eslint-enable no-console */
