@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 const { getAddress } = require('guld-mail')
+const { setupConfig } = require('guld-git-config')
 const program = require('commander')
 const VERSION = require('./package.json').version
 const addrs = require('email-addresses')
 const isEmail = require('is-email')
+const inquirer = require('inquirer')
 
 /* eslint-disable no-console */
 program
@@ -15,6 +17,9 @@ program
 program
   .command('parse <address>')
   .description('Parse an email address, returning exit code 1 if invalid.')
+program
+  .command('init [address]')
+  .description('Setup your public email address for the guld network.')
 
 program.parse(process.argv)
 
@@ -30,13 +35,36 @@ function printaddr (a) {
   }
 }
 
-var cmd
-if (program.commands.map(c => c._name).indexOf(program.args[0]) !== -1) cmd = program.args.shift()
+function inquireAddr (addr) {
+  inquirer
+    .prompt([
+      {
+        name: 'guldmail',
+        type: 'input',
+        message: 'What is your email address? (WARNING: public info!)',
+        default: addr
+      }
+    ]).then(answers => {
+      if (!isEmail(answers.guldmail)) {
+        console.error('invalid address')
+        process.exit(1)
+      } else {
+        setupConfig({'user': {'email': answers.guldmail}})
+        console.log('ok')
+      }
+    })
+}
+
+var cmd = program.args.shift()
 /* eslint-disable no-console */
 switch (cmd) {
   case 'parse':
     if (program.args.length > 0) printaddr(program.args[0])
     else getAddress().then(printaddr)
+    break
+  case 'init':
+    if (program.args.length > 0) inquireAddr(program.args[0])
+    else getAddress().then(inquireAddr)
     break
   case 'address':
   default:
