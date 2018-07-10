@@ -50,7 +50,6 @@ function inquireAddr (addr) {
         process.exit(1)
       } else {
         setupConfig({'user': {'email': answers.guldmail}})
-        console.log('ok')
       }
     })
 }
