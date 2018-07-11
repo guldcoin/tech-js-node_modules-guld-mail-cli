@@ -1,6 +1,6 @@
 {
   "name": "guld-mail-cli",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "Guld mail is a signed, encrypted, and witnessed email system.",
   "bin": {
     "guld-mail": "./cli.js"
