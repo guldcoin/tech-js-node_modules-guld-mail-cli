@@ -2,15 +2,17 @@
 const { getAddress } = require('guld-mail')
 const { setupConfig } = require('guld-git-config')
 const program = require('commander')
-const VERSION = require('./package.json').version
 const addrs = require('email-addresses')
 const isEmail = require('is-email')
 const inquirer = require('inquirer')
+const runCLI = require('guld-cli-run')
+const thispkg = require(`${__dirname}/package.json`)
 
 /* eslint-disable no-console */
 program
-  .description('Guld mail is a signed, encrypted, and witnessed email system.')
-  .version(VERSION)
+  .name(thispkg.name.replace('-cli', ''))
+  .version(thispkg.version)
+  .description(thispkg.description)
 program
   .command('address [name]')
   .description('Get the guld address of the current or specified user.')
@@ -54,21 +56,25 @@ function inquireAddr (addr) {
     })
 }
 
-var cmd = program.args.shift()
+var cmd = program.args && program.args.length > 0 ? program.args[0] : undefined
 /* eslint-disable no-console */
-switch (cmd) {
-  case 'parse':
-    if (program.args.length > 0) printaddr(program.args[0])
-    else getAddress().then(printaddr)
-    break
-  case 'init':
-    if (program.args.length > 0) inquireAddr(program.args[0])
-    else getAddress().then(inquireAddr)
-    break
-  case 'address':
-  default:
-    if (program.args.length > 0) getAddress(program.args[0]).then(console.log)
-    else getAddress().then(console.log)
-    break
+function runner () {
+  switch (cmd) {
+    case 'parse':
+      if (program.args.length > 0) printaddr(program.args[0])
+      else getAddress().then(printaddr)
+      break
+    case 'init':
+      if (program.args.length > 0) inquireAddr(program.args[0])
+      else getAddress().then(inquireAddr)
+      break
+    case 'address':
+    default:
+      if (program.args.length > 0) getAddress(program.args[0]).then(console.log)
+      else getAddress().then(console.log)
+      break
+  }
 }
 /* eslint-enable no-console */
+runCLI.bind(program)(program.help, runner)
+module.exports = program
